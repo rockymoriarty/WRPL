@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders | ConcertApp</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #7070af, #0041f3);
+            color: white;
+            padding-top: 80px; /* Untuk memberi ruang pada navbar */
+            font-family: Arial, sans-serif;
+        }
+
+        /* 🔹 NAVIGATION BAR */
+        nav {
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 5%;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        .nav-logo img {
+            width: 30px;
+            height: 30px;
+            margin-right: 8px;
+        }
+        .nav-center, .nav-right {
+            display: flex;
+            gap: 15px;
+        }
+        .nav-buttons a {
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .login-btn {
+            background: #3d3c3c;
+            color: white;
+            border: 2px solid #3d3c3c;
+            margin-left: 10px;
+        }
+
+        .register-btn {
+            background: #0041f3;
+            color: white;
+            border: 2px solid #0041f3;
+            margin-right: 10px;
+        }
+
+        .login-btn:hover {
+            background: white;
+            color: #3d3c3c;
+            border: 2px solid #3d3c3c;
+        }
+
+        .register-btn:hover {
+            background: white;
+            color: #0041f3;
+            border: 2px solid #0041f3;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            padding: 8px 14px;
+            border-radius: 5px;
+            transition: 0.3s;
+            font-size: 1em;
+        }
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* 🔹 ORDERS CONTAINER */
+        .orders-container {
+            max-width: 800px;
+            margin: 50px auto;
+            margin-top: 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .orders-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .order-list {
+            margin-bottom: 30px;
+        }
+
+        .order-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .order-item h3 {
+            margin: 0;
+        }
+
+        .order-item p {
+            margin: 5px 0;
+        }
+
+        /* 🔹 ORDER FORM */
+        .order-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .order-form input, .order-form select, .order-form button {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1em;
+        }
+
+        .order-form button {
+            background-color: #0041f3;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .order-form button:hover {
+            background-color: #0030c7;
+        }
+
+        /* 🔹 FOOTER */
+        footer {
+            width: 100%;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="nav-logo">
+            <img src="logo.png" alt="Logo"> ConcertApp
+        </a>
+        <div class="nav-center">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="search.html" class="nav-link">Search Concert</a>
+            <a href="orders.html" class="nav-link">Orders</a>
+            <a href="mytickets.html" class="nav-link">My Tickets</a>
+        </div>
+        <div class="nav-buttons">
+            <a href="login.html" class="login-btn">Login</a>
+            <a href="register.html" class="register-btn">Register</a>
+        </div>
+    </nav>
+
+    <div class="orders-container">
+        <h1>Daftar Order Tiket</h1>
+
+        <!-- Daftar Order -->
+        <div class="order-list">
+            <div class="order-item">
+                <h3>Konser Pop Nasional</h3>
+                <p>Lokasi: Jakarta, Indonesia</p>
+                <p>Tanggal: 25 Desember 2023</p>
+                <p>Jumlah Tiket: 2</p>
+                <p>Status: <strong style="color: #00ff00;">Dikonfirmasi</strong></p>
+            </div>
+            <div class="order-item">
+                <h3>Rock Festival 2023</h3>
+                <p>Lokasi: Bandung, Indonesia</p>
+                <p>Tanggal: 30 Desember 2023</p>
+                <p>Jumlah Tiket: 1</p>
+                <p>Status: <strong style="color: #ff0000;">Pending</strong></p>
+            </div>
+            <!-- Tambahkan lebih banyak order di sini -->
+        </div>
+
+        <!-- Form Pemesanan Tiket Baru -->
+        <h2>Pesan Tiket Baru</h2>
+        <form class="order-form">
+            <input type="text" placeholder="Nama Konser" required>
+            <input type="text" placeholder="Lokasi" required>
+            <input type="date" placeholder="Tanggal" required>
+            <input type="number" placeholder="Jumlah Tiket" min="1" required>
+            <select required>
+                <option value="">Pilih Metode Pembayaran</option>
+                <option value="credit_card">Kartu Kredit</option>
+                <option value="bank_transfer">Transfer Bank</option>
+                <option value="e_wallet">E-Wallet</option>
+            </select>
+            <button type="submit">Pesan Tiket</button>
+        </form>
+    </div>
+
+    <footer>
+        Copyright 2025 WRPL
+    </footer>
+</body>
+</html>

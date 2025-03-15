@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            background-image: url(assets/bg2.jpg);
+            background-size: cover;
+        }
+        nav{
+            padding-top: 40px;
+            padding-left: 90px;
+            padding-right: 90px;
+        }
+        .navbar{
+            display: flex;
+        }
+        .logo{
+            display: flex;
+            align-items: center;
+            width: 25%;
+            
+        }
+        .logo img{
+            max-height: 35px;
+            margin-right: 10px;
+        }
+
+        .logo h1{
+            font-family: arial;
+            color: rgb(255, 255, 255);
+        }
+
+        .navbtn{
+            display: flex;
+            align-items: center;
+            
+            font-family: arial;
+            width: 50%;
+            justify-content: space-between;
+        }
+
+        .navbtn a{
+            text-decoration: none;
+            color: rgb(255, 255, 255);
+            font-weight: bold;
+        }
+
+        
+        .navbtn a {
+            text-decoration: none;
+            color: rgb(255, 255, 255);
+            font-weight: bold;
+            position: relative;
+        }
+
+        .navbtn a::after {
+            content: ""; /* Empty pseudo-element for the underline */
+            position: absolute;
+            left: 0;
+            bottom: -2px; /* Position underline slightly below text */
+            width: 0;
+            height: 2px; /* Thickness of underline */
+            background-color: #00b7ff; /* Underline color */
+            transition: width 0.3s ease-in-out;
+        }
+
+        .navbtn a:hover::after {
+            width: 100%; /* Hover effect: draw underline */
+        }
+
+        .navbtn a.active::after {
+            width: 100%; /* Keep underline full width */
+        }
+
+
+        .logreg{
+            display: flex;
+            align-items: center;
+            
+            width: 25%;
+            justify-content: right;
+        }
+
+        .logreg a{
+            text-decoration: none;
+            font-family: arial;
+            color: rgb(255, 255, 255);
+            padding-right: 20px;
+            font-weight: bold;
+        }
+
+        .logreg a {
+        text-decoration: none;
+        font-family: arial;
+        color: rgb(255, 255, 255);
+        padding: 10px 20px;
+        font-weight: bold;
+        position: relative;
+        overflow: hidden; /* Ensures the background doesn't spill outside */
+        transition: color 0.3s ease-in-out; /* Smooth transition for text color */
+        }
+
+        .logreg a::before {
+            content: ""; /* Empty pseudo-element for the background */
+            position: absolute;
+            top: 0;
+            left: -100%; /* Start from outside the button (left) */
+            width: 100%;
+            height: 100%;
+            background-color: #4c8baf; /* Background color for the animation */
+            border-radius: 5px;
+            transition: left 0.2s ease-in-out; /* Smooth sliding effect */
+            z-index: -1; /* Ensures the background appears behind the text */
+        }
+
+        .logreg a:hover::before {
+            left: 0; /* Slide the background into view */
+        }
+
+        .logreg a:hover {
+            color: #ffffff; /* Change the text color if needed for better contrast */
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            margin-top: 100px;
+            width: 100%;
+        }
+
+        .form-container {
+            background: rgba(41, 38, 94, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 350px;
+            font-family: arial;
+        }
+
+        .form-container h2 {
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .form-container input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            display: block;
+        }
+
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: #4A00E0;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .form-container p {
+            color: white;
+        }
+
+        .form-container a {
+            color: #8E2DE2;
+            text-decoration: none;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .floating {
+            position: relative;
+            animation: moveUpDown 3s ease-in-out infinite; /* Infinite animation loop */
+        }
+        @keyframes moveUpDown {
+            0% {
+                transform: translateY(0); /* Start position */
+            }
+            50% {
+                transform: translateY(-20px); /* Move up by 20px */
+            }
+            100% {
+                transform: translateY(0); /* Return to start position */
+            }
+        }
+
+        footer{
+            font-family: arial;
+            color: white;
+            margin-bottom: 0;
+            padding-top: 60px;
+            padding-left: 90px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="navbar">
+            <div class="logo">
+                <img src="assets/logo.png" alt="logo">
+                <h1>TixVibe</h1>
+            </div>
+            <div class="navbtn">
+                <a href="index.html">Home</a>
+                <a href="search.html">Search Ticket</a>
+                <a href="mytickets.html">My Tickets</a>
+            </div>
+            <div class="logreg">
+                <a href="login.html">Login</a>
+                <a href="register.html">Register</a>
+
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="form-container">
+            <h2>Register</h2>
+            <form action="#" method="POST">
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit">Register</button>
+            </form>
+            <p>Already have an account? <a href="login.html">Login here</a></p>
+        </div>
+    </div>
+    <footer>
+        <p>Copyright 2025 WRPL</p>
+    </footer>
+
+    <script>
+        // Select all nav buttons
+        const navLinks = document.querySelectorAll('.navbtn a');
+    
+        // Add click event listener to each link
+        navLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                // Remove 'active' class from all links
+                navLinks.forEach(nav => nav.classList.remove('active'));
+    
+                // Add 'active' class to the clicked link
+                this.classList.add('active');
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const inputs = document.querySelectorAll(".form-container input");
+            const button = document.querySelector(".form-container button");
+        
+            // Animasi input saat diklik
+            inputs.forEach(input => {
+                input.addEventListener("focus", () => {
+                    input.style.border = "2px solid #8E2DE2";
+                    input.style.transition = "0.3s";
+                });
+        
+                input.addEventListener("blur", () => {
+                    input.style.border = "none";
+                });
+            });
+        
+            // Validasi sederhana saat submit
+            button.addEventListener("click", (event) => {
+                event.preventDefault();
+                const email = document.querySelector("input[name='email']").value;
+                const password = document.querySelector("input[name='password']").value;
+        
+                if (email === "" || password === "") {
+                    alert("Please fill in all fields!");
+                } else {
+                    button.innerHTML = "Registering...";
+                    setTimeout(() => {
+                        alert("Register successful!");
+                        button.innerHTML = "Register";
+                        document.querySelector("form").reset();
+                    }, 1500);
+                }
+            });
+        
+            // Efek hover tombol login
+            button.addEventListener("mouseover", () => {
+                button.style.background = "#8E2DE2";
+                button.style.transition = "0.3s";
+            });
+        
+            button.addEventListener("mouseout", () => {
+                button.style.background = "#4A00E0";
+            });
+        });
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>My Orders</h1>
+    </header>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+        <a href="search.html">Search Concert</a>
+        <a href="orders.html">Orders</a>
+        <a href="my_orders.html">My Orders</a>
+    </nav>
+    <section class="my-orders">
+        <h2>Your Ticket Orders</h2>
+        <table>
+            <tr>
+                <th>Order ID</th>
+                <th>Concert</th>
+                <th>Date</th>
+                <th>Seats</th>
+                <th>Price</th>
+                <th>Status</th>
+            </tr>
+            <tr>
+                <td>10234</td>
+                <td>Taylor Swift - Eras Tour</td>
+                <td>15 May 2025</td>
+                <td>VIP Section</td>
+                <td>$250</td>
+                <td>Confirmed</td>
+            </tr>
+            <tr>
+                <td>10235</td>
+                <td>Ed Sheeran Live</td>
+                <td>20 June 2025</td>
+                <td>General Admission</td>
+                <td>$100</td>
+                <td>Pending</td>
+            </tr>
+            <tr>
+                <td>10236</td>
+                <td>Coldplay World Tour</td>
+                <td>30 July 2025</td>
+                <td>Front Row</td>
+                <td>$400</td>
+                <td>Confirmed</td>
+            </tr>
+        </table>
+    </section>
+    <footer>
+        &copy; 2025 Concert Ticket. All Rights Reserved.
+    </footer>
+</body>
+</html>
