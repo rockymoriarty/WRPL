@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,46 +14,50 @@
             font-family: arial;
             color: #ffffff;
         }
-        nav{
+
+        nav {
             padding-top: 40px;
             padding-left: 90px;
             padding-right: 90px;
         }
-        .navbar{
+
+        .navbar {
             display: flex;
         }
-        .logo{
+
+        .logo {
             display: flex;
             align-items: center;
             width: 25%;
-            
+
         }
-        .logo img{
+
+        .logo img {
             max-height: 35px;
             margin-right: 10px;
         }
 
-        .logo h1{
+        .logo h1 {
             font-family: arial;
             color: rgb(255, 255, 255);
         }
 
-        .navbtn{
+        .navbtn {
             display: flex;
             align-items: center;
-            
+
             font-family: arial;
             width: 50%;
             justify-content: space-between;
         }
 
-        .navbtn a{
+        .navbtn a {
             text-decoration: none;
             color: rgb(255, 255, 255);
             font-weight: bold;
         }
 
-        
+
         .navbtn a {
             text-decoration: none;
             color: rgb(255, 255, 255);
@@ -61,34 +66,40 @@
         }
 
         .navbtn a::after {
-            content: ""; /* Empty pseudo-element for the underline */
+            content: "";
+            /* Empty pseudo-element for the underline */
             position: absolute;
             left: 0;
-            bottom: -2px; /* Position underline slightly below text */
+            bottom: -2px;
+            /* Position underline slightly below text */
             width: 0;
-            height: 2px; /* Thickness of underline */
-            background-color: #00b7ff; /* Underline color */
+            height: 2px;
+            /* Thickness of underline */
+            background-color: #00b7ff;
+            /* Underline color */
             transition: width 0.3s ease-in-out;
         }
 
         .navbtn a:hover::after {
-            width: 100%; /* Hover effect: draw underline */
+            width: 100%;
+            /* Hover effect: draw underline */
         }
 
         .navbtn a.active::after {
-            width: 100%; /* Keep underline full width */
+            width: 100%;
+            /* Keep underline full width */
         }
 
 
-        .logreg{
+        .logreg {
             display: flex;
             align-items: center;
-            
+
             width: 25%;
             justify-content: right;
         }
 
-        .logreg a{
+        .logreg a {
             text-decoration: none;
             font-family: arial;
             color: rgb(255, 255, 255);
@@ -97,43 +108,53 @@
         }
 
         .logreg a {
-        text-decoration: none;
-        font-family: arial;
-        color: rgb(255, 255, 255);
-        padding: 10px 20px;
-        font-weight: bold;
-        position: relative;
-        overflow: hidden; /* Ensures the background doesn't spill outside */
-        transition: color 0.3s ease-in-out; /* Smooth transition for text color */
+            text-decoration: none;
+            font-family: arial;
+            color: rgb(255, 255, 255);
+            padding: 10px 20px;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+            /* Ensures the background doesn't spill outside */
+            transition: color 0.3s ease-in-out;
+            /* Smooth transition for text color */
         }
 
         .logreg a::before {
-            content: ""; /* Empty pseudo-element for the background */
+            content: "";
+            /* Empty pseudo-element for the background */
             position: absolute;
             top: 0;
-            left: -100%; /* Start from outside the button (left) */
+            left: -100%;
+            /* Start from outside the button (left) */
             width: 100%;
             height: 100%;
-            background-color: #4c8baf; /* Background color for the animation */
+            background-color: #4c8baf;
+            /* Background color for the animation */
             border-radius: 5px;
-            transition: left 0.2s ease-in-out; /* Smooth sliding effect */
-            z-index: -1; /* Ensures the background appears behind the text */
+            transition: left 0.2s ease-in-out;
+            /* Smooth sliding effect */
+            z-index: -1;
+            /* Ensures the background appears behind the text */
         }
 
         .logreg a:hover::before {
-            left: 0; /* Slide the background into view */
+            left: 0;
+            /* Slide the background into view */
         }
 
         .logreg a:hover {
-            color: #ffffff; /* Change the text color if needed for better contrast */
+            color: #ffffff;
+            /* Change the text color if needed for better contrast */
         }
 
-        .container{
-            
+        .container {
+
             margin-left: 90px;
             margin-right: 90px;
         }
-        .text-container{
+
+        .text-container {
             font-family: arial;
             width: 90%;
             font-size: x-large;
@@ -143,21 +164,25 @@
             align-items: center;
             padding-left: 70px;
             padding-right: 0px;
-            
+
         }
-        .title{
+
+        .title {
             width: 50%;
-            
+
         }
-        .title h1{
+
+        .title h1 {
             margin-bottom: 0;
-            
+
         }
-        .title p{
+
+        .title p {
             padding-left: 10px;
             margin-top: 20px;
         }
-        .hero{
+
+        .hero {
             display: flex;
             padding-top: 100px;
             align-items: center;
@@ -167,28 +192,36 @@
 
         .floating {
             position: relative;
-            animation: moveUpDown 3s ease-in-out infinite; /* Infinite animation loop */
+            animation: moveUpDown 3s ease-in-out infinite;
+            /* Infinite animation loop */
         }
+
         @keyframes moveUpDown {
             0% {
-                transform: translateY(0); /* Start position */
+                transform: translateY(0);
+                /* Start position */
             }
+
             50% {
-                transform: translateY(-20px); /* Move up by 20px */
+                transform: translateY(-20px);
+                /* Move up by 20px */
             }
+
             100% {
-                transform: translateY(0); /* Return to start position */
+                transform: translateY(0);
+                /* Return to start position */
             }
         }
 
-        footer{
+        footer {
             font-family: arial;
             color: white;
             margin-bottom: 0;
             padding-top: 60px;
             padding-left: 90px;
         }
-            /* Copy style nav dan footer dari search.html agar konsisten */
+
+        /* Copy style nav dan footer dari search.html agar konsisten */
         .container {
             max-width: 800px;
             margin: 50px auto;
@@ -197,23 +230,74 @@
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
+
         .ticket-detail p {
             margin: 5px 0;
         }
-        #paymentForm select, #payButton {
+
+        #paymentForm select,
+        #payButton {
             padding: 10px;
             border-radius: 5px;
             border: none;
             font-size: 1em;
         }
+
+        .custom-select {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .custom-select select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 2px solid #00b7ff;
+            background-color: rgba(41, 38, 94, 0.8);
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.3s ease-in-out;
+        }
+
+        .custom-select select:hover {
+            border-color: #0041f3;
+        }
+
+        .custom-select::after {
+            content: "▼";
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            color: #00b7ff;
+            pointer-events: none;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .custom-select:hover::after {
+            color: #0041f3;
+        }
+
         #payButton {
             background-color: #0041f3;
             color: white;
             cursor: pointer;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background-color 0.3s ease-in-out;
         }
+
         #payButton:hover {
             background-color: #0030c7;
         }
+
         #overlay {
             display: none;
             position: fixed;
@@ -223,6 +307,7 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
         }
+
         #paymentPopup {
             display: none;
             position: fixed;
@@ -234,6 +319,7 @@
             border-radius: 10px;
             text-align: center;
         }
+
         #paymentPopup button {
             padding: 10px 20px;
             margin: 5px;
@@ -241,22 +327,25 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         #confirmPayment {
             background-color: #0041f3;
             color: white;
         }
+
         #cancelPayment {
             background-color: #ff4444;
             color: white;
         }
     </style>
 </head>
+
 <body>
     <nav>
         <!-- Copy navbar dari search.html -->
     </nav>
     <div class="container">
-        <h1>Detail Tiket</h1>
+        <h1>Ticket Details</h1>
         <div class="ticket-detail">
             <h2 id="ticketTitle"></h2>
             <p id="ticketLocation"></p>
@@ -264,59 +353,94 @@
             <p id="ticketPrice"></p>
         </div>
         <form id="paymentForm">
-            <h3>Pilih Metode Pembayaran</h3>
-            <select id="paymentMethod">
-                <option value="credit">Kartu Kredit</option>
-                <option value="debit">Kartu Debit</option>
-                <option value="paypal">PayPal</option>
-            </select>
-            <button type="button" id="payButton">Bayar</button>
-        </form>
-    </div>
-    <div id="overlay"></div>
-    <div id="paymentPopup">
-        <h3>Konfirmasi Pembayaran</h3>
-        <p id="popupTitle"></p>
-        <p id="popupPrice"></p>
-        <p id="popupMethod"></p>
-        <button id="confirmPayment">Konfirmasi Pembayaran</button>
-        <button id="cancelPayment">Batal</button>
-    </div>
-    <footer>
-        <p>Copyright 2025 WRPL</p>
-    </footer>
-    <script>
-        const selectedTicket = JSON.parse(localStorage.getItem('selectedTicket'));
-        if (selectedTicket) {
-            document.getElementById('ticketTitle').textContent = selectedTicket.title;
-            document.getElementById('ticketLocation').textContent = selectedTicket.location;
-            document.getElementById('ticketDate').textContent = selectedTicket.date;
-            document.getElementById('ticketPrice').textContent = `Harga: ${selectedTicket.price}`;
-        }
+            <h3>Select Ticket Type</h3>
+            <div class="custom-select">
+                <select id="ticketType">
+                    <option value="vip">VIP</option>
+                    <option value="festival">Festival</option>
+                    <option value="regular">Regular</option>
+                    <option value="earlybird">Early Bird</option>
+                </select>
+                <form id="paymentForm">
+                    <h3>Payment Method</h3>
+                    <select id="paymentMethod">
+                        <option value="credit">Credit Card</option>
+                        <option value="debit">Debit Card</option>
+                        <option value="paypal">PayPal</option>
+                    </select>
+                    <button type="button" id="payButton">Pay</button>
+                </form>
+            </div>
+            <div id="overlay"></div>
+            <div id="paymentPopup">
+                <h3>Payment Details</h3>
+                <p id="popupTitle"></p>
+                <p id="popupPrice"></p>
+                <p id="popupMethod"></p>
+                <button id="confirmPayment">Confirm Payment</button>
+                <button id="cancelPayment">Cancel</button>
+            </div>
+            <footer>
+                <p>Copyright 2025 WRPL</p>
+            </footer>
+            <script>
+                const selectedTicket = JSON.parse(localStorage.getItem('selectedTicket'));
+                if (selectedTicket) {
+                    document.getElementById('ticketTitle').textContent = selectedTicket.title;
+                    document.getElementById('ticketLocation').textContent = selectedTicket.location;
+                    document.getElementById('ticketDate').textContent = selectedTicket.date;
+                    // document.getElementById('ticketPrice').textContent = `Price: ${selectedTicket.price}`;
+                }
 
-        function showPaymentPopup() {
-            const method = document.getElementById('paymentMethod').value;
-            document.getElementById('popupTitle').textContent = `Tiket: ${selectedTicket.title}`;
-            document.getElementById('popupPrice').textContent = `Harga: ${selectedTicket.price}`;
-            document.getElementById('popupMethod').textContent = `Metode: ${method}`;
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('paymentPopup').style.display = 'block';
-        }
+                function showPaymentPopup() {
+                    const method = document.getElementById('paymentMethod').value;
+                    const ticketType = document.getElementById('ticketType').value;
 
-        function hidePaymentPopup() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('paymentPopup').style.display = 'none';
-        }
+                    // Update harga berdasarkan jenis tiket
+                    let price;
+                    switch (ticketType) {
+                        case 'vip':
+                            price = 'Rp 1.500.000';
+                            break;
+                        case 'festival':
+                            price = 'Rp 1.000.000';
+                            break;
+                        case 'regular':
+                            price = 'Rp 750.000';
+                            break;
+                        case 'earlybird':
+                            price = 'Rp 500.000';
+                            break;
+                        default:
+                            price = 'Rp 500.000';
+                    }
 
-        document.getElementById('payButton').addEventListener('click', showPaymentPopup);
-        document.getElementById('confirmPayment').addEventListener('click', () => {
-            let myTickets = JSON.parse(localStorage.getItem('myTickets')) || [];
-            myTickets.push({ ...selectedTicket, status: 'Active' });
-            localStorage.setItem('myTickets', JSON.stringify(myTickets));
-            hidePaymentPopup();
-            window.location.href = 'mytickets.html';
-        });
-        document.getElementById('cancelPayment').addEventListener('click', hidePaymentPopup);
-    </script>
+                    selectedTicket.price = price;
+
+                    document.getElementById('popupTitle').textContent = `Tiket: ${selectedTicket.title}`;
+                    document.getElementById('popupPrice').textContent = `Harga: ${selectedTicket.price}`;
+                    document.getElementById('popupMethod').textContent = `Metode: ${method}`;
+                    document.getElementById('overlay').style.display = 'block';
+                    document.getElementById('paymentPopup').style.display = 'block';
+                }
+
+                function hidePaymentPopup() {
+                    document.getElementById('overlay').style.display = 'none';
+                    document.getElementById('paymentPopup').style.display = 'none';
+                    // Alihkan kembali ke halaman ticket-detail.html
+                    window.location.href = 'ticket-detail.html';
+                }
+
+                document.getElementById('payButton').addEventListener('click', showPaymentPopup);
+                document.getElementById('confirmPayment').addEventListener('click', () => {
+                    let myTickets = JSON.parse(localStorage.getItem('myTickets')) || [];
+                    myTickets.push({ ...selectedTicket, status: 'Active' });
+                    localStorage.setItem('myTickets', JSON.stringify(myTickets));
+                    hidePaymentPopup();
+                    window.location.href = 'mytickets.html';
+                });
+                document.getElementById('cancelPayment').addEventListener('click', hidePaymentPopup);
+            </script>
 </body>
+
 </html>

@@ -4,7 +4,7 @@ const db = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "", // Kosongkan jika pakai XAMPP
-    database: "concertrev5"
+    database: "concertrev2"
 });
 
 // Koneksi ke database
