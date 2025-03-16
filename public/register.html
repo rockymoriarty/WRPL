@@ -252,7 +252,9 @@
                 const email = document.querySelector("input[name='email']").value;
                 const password = document.querySelector("input[name='password']").value;
 
-                const response = await fetch("/auth/register", {
+                console.log({ fullname, email, password });
+
+                const response = await fetch("http://localhost:3000/auth/register", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ fullname, email, password }),
@@ -268,8 +270,6 @@
                 }
             });
         });
-
-    </script>
-    
+    </script> 
 </body>
 </html>
