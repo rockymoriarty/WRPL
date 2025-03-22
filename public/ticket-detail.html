@@ -342,21 +342,7 @@
 
 <body>
     <nav>
-        <div class="navbar">
-            <div class="logo">
-                <img src="assets/logo.png" alt="logo">
-                <h1>TixVibe</h1>
-            </div>
-            <div class="navbtn">
-                <a href="index.html">Home</a>
-                <a href="search.html">Search Ticket</a>
-                <a href="mytickets.html">My Tickets</a>
-            </div>
-            <div class="logreg">
-                <a href="login.html">Login</a>
-                <a href="register.html">Register</a>
-            </div>
-        </div>
+        <!-- Copy navbar dari search.html -->
     </nav>
     <div class="container">
         <h1>Ticket Details</h1>
@@ -394,66 +380,67 @@
                 <button id="confirmPayment">Confirm Payment</button>
                 <button id="cancelPayment">Cancel</button>
             </div>
-        </form>
-    </div>    
-    <footer>
-        <p>Copyright 2025 WRPL</p>
-    </footer>
-    <script>
-        const selectedTicket = JSON.parse(localStorage.getItem('selectedTicket'));
-        if (selectedTicket) {
-            document.getElementById('ticketTitle').textContent = selectedTicket.title;
-            document.getElementById('ticketLocation').textContent = selectedTicket.location;
-            document.getElementById('ticketDate').textContent = selectedTicket.date;
-            // document.getElementById('ticketPrice').textContent = `Price: ${selectedTicket.price}`;
-            }
+            <footer>
+                <p>Copyright 2025 WRPL</p>
+            </footer>
+            <script>
+                const selectedTicket = JSON.parse(localStorage.getItem('selectedTicket'));
+                if (selectedTicket) {
+                    document.getElementById('ticketTitle').textContent = selectedTicket.title;
+                    document.getElementById('ticketLocation').textContent = selectedTicket.location;
+                    document.getElementById('ticketDate').textContent = selectedTicket.date;
+                    // document.getElementById('ticketPrice').textContent = `Price: ${selectedTicket.price}`;
+                }
 
-        function showPaymentPopup() {
-            const method = document.getElementById('paymentMethod').value;
-            const ticketType = document.getElementById('ticketType').value;
+                function showPaymentPopup() {
+                    const method = document.getElementById('paymentMethod').value;
+                    const ticketType = document.getElementById('ticketType').value;
 
-            // Update harga berdasarkan jenis tiket
-            let price;
-            switch (ticketType) {
-                case 'vip':
-                    price = 'Rp 1.500.000';
-                    break;
-                case 'festival':
-                    price = 'Rp 1.000.000';
-                    break;
-                case 'regular':
-                    price = 'Rp 750.000';
-                    break;
-                case 'earlybird':
-                    price = 'Rp 500.000';
-                    break;
-            }
+                    // Update harga berdasarkan jenis tiket
+                    let price;
+                    switch (ticketType) {
+                        case 'vip':
+                            price = 'Rp 1.500.000';
+                            break;
+                        case 'festival':
+                            price = 'Rp 1.000.000';
+                            break;
+                        case 'regular':
+                            price = 'Rp 750.000';
+                            break;
+                        case 'earlybird':
+                            price = 'Rp 500.000';
+                            break;
+                        default:
+                            price = 'Rp 500.000';
+                    }
 
-            selectedTicket.price = price;
+                    selectedTicket.price = price;
 
-            document.getElementById('popupTitle').textContent = `Tiket: ${selectedTicket.title}`;
-            document.getElementById('popupPrice').textContent = `Harga: ${selectedTicket.price}`;
-            document.getElementById('popupMethod').textContent = `Metode: ${method}`;
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('paymentPopup').style.display = 'block';
-        }
+                    document.getElementById('popupTitle').textContent = `Tiket: ${selectedTicket.title}`;
+                    document.getElementById('popupPrice').textContent = `Harga: ${selectedTicket.price}`;
+                    document.getElementById('popupMethod').textContent = `Metode: ${method}`;
+                    document.getElementById('overlay').style.display = 'block';
+                    document.getElementById('paymentPopup').style.display = 'block';
+                }
 
-        function hidePaymentPopup() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('paymentPopup').style.display = 'none';
-            // Alihkan kembali ke halaman ticket-detail.html
-            window.location.href = 'ticket-detail.html';
-        }
+                function hidePaymentPopup() {
+                    document.getElementById('overlay').style.display = 'none';
+                    document.getElementById('paymentPopup').style.display = 'none';
+                    // Alihkan kembali ke halaman ticket-detail.html
+                    window.location.href = 'ticket-detail.html';
+                }
 
-        document.getElementById('payButton').addEventListener('click', showPaymentPopup);
-        document.getElementById('confirmPayment').addEventListener('click', () => {
-            let myTickets = JSON.parse(localStorage.getItem('myTickets')) || [];
-            myTickets.push({ ...selectedTicket, status: 'Active' });
-            localStorage.setItem('myTickets', JSON.stringify(myTickets));
-            hidePaymentPopup();
-            window.location.href = 'mytickets.html';
-        });
-        document.getElementById('cancelPayment').addEventListener('click', hidePaymentPopup);
-    </script>
+                document.getElementById('payButton').addEventListener('click', showPaymentPopup);
+                document.getElementById('confirmPayment').addEventListener('click', () => {
+                    let myTickets = JSON.parse(localStorage.getItem('myTickets')) || [];
+                    myTickets.push({ ...selectedTicket, status: 'Active' });
+                    localStorage.setItem('myTickets', JSON.stringify(myTickets));
+                    hidePaymentPopup();
+                    window.location.href = 'mytickets.html';
+                });
+                document.getElementById('cancelPayment').addEventListener('click', hidePaymentPopup);
+            </script>
 </body>
+
 </html>
