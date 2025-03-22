@@ -3,127 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Login | TixVibe</title>
     <style>
-        body{
+        body {
             margin: 0;
             padding: 0;
             background-image: url(assets/bg2.jpg);
             background-size: cover;
+            font-family: Arial, sans-serif;
+            overflow-y: scroll;
         }
-        nav{
+        nav {
             padding-top: 40px;
             padding-left: 90px;
             padding-right: 90px;
         }
-        .navbar{
+        .navbar {
             display: flex;
         }
-        .logo{
+        .logo {
             display: flex;
             align-items: center;
             width: 25%;
-            
         }
-        .logo img{
+        .logo img {
             max-height: 35px;
             margin-right: 10px;
         }
-
-        .logo h1{
+        .logo h1 {
             font-family: arial;
             color: rgb(255, 255, 255);
         }
-
-        .navbtn{
+        .navbtn {
             display: flex;
             align-items: center;
-            
             font-family: arial;
             width: 50%;
             justify-content: space-between;
         }
-
-        .navbtn a{
-            text-decoration: none;
-            color: rgb(255, 255, 255);
-            font-weight: bold;
-        }
-
-        
         .navbtn a {
             text-decoration: none;
             color: rgb(255, 255, 255);
             font-weight: bold;
             position: relative;
         }
-
         .navbtn a::after {
-            content: ""; /* Empty pseudo-element for the underline */
+            content: "";
             position: absolute;
             left: 0;
-            bottom: -2px; /* Position underline slightly below text */
+            bottom: -2px;
             width: 0;
-            height: 2px; /* Thickness of underline */
-            background-color: #00b7ff; /* Underline color */
+            height: 2px;
+            background-color: #00b7ff;
             transition: width 0.3s ease-in-out;
         }
-
         .navbtn a:hover::after {
-            width: 100%; /* Hover effect: draw underline */
+            width: 100%;
         }
-
         .navbtn a.active::after {
-            width: 100%; /* Keep underline full width */
+            width: 100%;
         }
-
-
-        .logreg{
+        .logreg {
             display: flex;
             align-items: center;
-            
             width: 25%;
             justify-content: right;
         }
-
-        .logreg a{
+        .logreg a {
             text-decoration: none;
             font-family: arial;
             color: rgb(255, 255, 255);
-            padding-right: 20px;
+            padding: 10px 20px;
             font-weight: bold;
+            position: relative;
+            overflow: hidden;
+            transition: color 0.3s ease-in-out;
         }
-
-        .logreg a {
-        text-decoration: none;
-        font-family: arial;
-        color: rgb(255, 255, 255);
-        padding: 10px 20px;
-        font-weight: bold;
-        position: relative;
-        overflow: hidden; /* Ensures the background doesn't spill outside */
-        transition: color 0.3s ease-in-out; /* Smooth transition for text color */
-        }
-
         .logreg a::before {
-            content: ""; /* Empty pseudo-element for the background */
+            content: "";
             position: absolute;
             top: 0;
-            left: -100%; /* Start from outside the button (left) */
+            left: -100%;
             width: 100%;
             height: 100%;
-            background-color: #4c8baf; /* Background color for the animation */
+            background-color: #4c8baf;
             border-radius: 5px;
-            transition: left 0.2s ease-in-out; /* Smooth sliding effect */
-            z-index: -1; /* Ensures the background appears behind the text */
+            transition: left 0.2s ease-in-out;
+            z-index: -1;
         }
-
         .logreg a:hover::before {
-            left: 0; /* Slide the background into view */
+            left: 0;
         }
-
         .logreg a:hover {
-            color: #ffffff; /* Change the text color if needed for better contrast */
+            color: #ffffff;
         }
 
         .container {
@@ -140,11 +112,9 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             text-align: center;
             width: 350px;
-            font-family: arial;
         }
 
         .form-container h2 {
-            margin-bottom: 20px;
             color: white;
         }
 
@@ -157,6 +127,19 @@
             display: block;
         }
 
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #aaa;
+        }
+
         .form-container button {
             width: 100%;
             padding: 10px;
@@ -167,36 +150,34 @@
             border-radius: 5px;
             cursor: pointer;
             margin-top: 10px;
-        }
-
-        .form-container p {
-            color: white;
-        }
-
-        .form-container a {
-            color: #8E2DE2;
-            text-decoration: none;
-            display: block;
-            margin-top: 10px;
-        }
-
-        .floating {
             position: relative;
-            animation: moveUpDown 3s ease-in-out infinite; /* Infinite animation loop */
-        }
-        @keyframes moveUpDown {
-            0% {
-                transform: translateY(0); /* Start position */
-            }
-            50% {
-                transform: translateY(-20px); /* Move up by 20px */
-            }
-            100% {
-                transform: translateY(0); /* Return to start position */
-            }
         }
 
-        footer{
+        .form-container button:disabled {
+            background: #888;
+            cursor: not-allowed;
+        }
+
+        .loader {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+            animation: spin 1s linear infinite;
+            display: none;
+            position: absolute;
+            right: 15px;
+            top: 25%;
+            transform: translateY(-50%);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        footer {
             font-family: arial;
             color: white;
             margin-bottom: 0;
@@ -220,85 +201,104 @@
             <div class="logreg">
                 <a href="login.html">Login</a>
                 <a href="register.html">Register</a>
-
             </div>
         </div>
     </nav>
+
     <div class="container">
         <div class="form-container">
             <h2>Login</h2>
-            <form action="#" method="POST">
-                <input type="email" name="email" placeholder="Email" required>
-                <input type="password" name="password" placeholder="Password" required>
-                <button type="submit">Login</button>
+            <form id="login-form">
+                <input type="email" name="email" placeholder="Email" required autocomplete="off">
+                <div class="password-container">
+                    <input type="password" name="password" id="password" placeholder="Password" required autocomplete="off">
+                    <span class="toggle-password">👁️</span>
+                </div>
+                <button type="submit">
+                    Login
+                    <div class="loader"></div>
+                </button>
             </form>
             <p>Don't have an account? <a href="register.html">Register here</a></p>
         </div>
     </div>
+
     <footer>
         <p>Copyright 2025 WRPL</p>
     </footer>
 
     <script>
-        // Select all nav buttons
-        const navLinks = document.querySelectorAll('.navbtn a');
-    
-        // Add click event listener to each link
-        navLinks.forEach(link => {
-            link.addEventListener('click', function () {
-                // Remove 'active' class from all links
-                navLinks.forEach(nav => nav.classList.remove('active'));
-    
-                // Add 'active' class to the clicked link
-                this.classList.add('active');
+        document.addEventListener("DOMContentLoaded", function () {
+            if (localStorage.getItem("token")) {
+            window.location.href = "index.html"; // Redirect ke home jika sudah login
+            }
+
+            const form = document.getElementById("login-form");
+            const emailInput = form.querySelector("input[name='email']");
+            const passwordInput = form.querySelector("input[name='password']");
+            const button = form.querySelector("button");
+            const loader = button.querySelector(".loader");
+
+            // Toggle password visibility
+            document.querySelector(".toggle-password").addEventListener("click", function () {
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                } else {
+                    passwordInput.type = "password";
+                }
+            });
+
+            // Login process
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault();
+
+                button.disabled = true;
+                loader.style.display = "block";
+
+                const email = emailInput.value;
+                const password = passwordInput.value;
+
+                try {
+                    const response = await fetch("http://localhost:3000/auth/login", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ email, password }),
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        alert("Login successful! 🎉");
+                        localStorage.setItem("token", result.token);
+                        window.location.href = "index.html";
+                    } else {
+                        alert("Error: " + (result.error || "Unknown error"));
+                    }
+                } catch (error) {
+                    alert("Login failed. Please try again.");
+                } finally {
+                    button.disabled = false;
+                    loader.style.display = "none";
+                }
             });
         });
 
         document.addEventListener("DOMContentLoaded", function () {
-            const inputs = document.querySelectorAll(".form-container input");
-            const button = document.querySelector(".form-container button");
-        
-            // Animasi input saat diklik
-            inputs.forEach(input => {
-                input.addEventListener("focus", () => {
-                    input.style.border = "2px solid #8E2DE2";
-                    input.style.transition = "0.3s";
-                });
-        
-                input.addEventListener("blur", () => {
-                    input.style.border = "none";
-                });
+        const logregDiv = document.querySelector(".logreg");
+        const token = localStorage.getItem("token");
+
+        if (token) {
+            // Jika sudah login, ubah navbar jadi Logout
+            logregDiv.innerHTML = `<a href="#" id="logout">Logout</a>`;
+
+            // Tambahkan event listener untuk Logout
+            document.getElementById("logout").addEventListener("click", function () {
+                localStorage.removeItem("token"); // Hapus token dari localStorage
+                alert("Logout successful!");
+                window.location.reload(); // Refresh halaman untuk update navbar
             });
-        
-            // Validasi sederhana saat submit
-            button.addEventListener("click", (event) => {
-                event.preventDefault();
-                const email = document.querySelector("input[name='email']").value;
-                const password = document.querySelector("input[name='password']").value;
-        
-                if (email === "" || password === "") {
-                    alert("Please fill in all fields!");
-                } else {
-                    button.innerHTML = "Logging in...";
-                    setTimeout(() => {
-                        alert("Login successful!");
-                        button.innerHTML = "Login";
-                        document.querySelector("form").reset();
-                    }, 1500);
-                }
-            });
-        
-            // Efek hover tombol login
-            button.addEventListener("mouseover", () => {
-                button.style.background = "#8E2DE2";
-                button.style.transition = "0.3s";
-            });
-        
-            button.addEventListener("mouseout", () => {
-                button.style.background = "#4A00E0";
-            });
-        });
+        }
+    });
     </script>
-    
 </body>
 </html>

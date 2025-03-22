@@ -80,7 +80,6 @@
         .logreg{
             display: flex;
             align-items: center;
-            
             width: 25%;
             justify-content: right;
         }
@@ -199,10 +198,9 @@
                 <a href="search.html">Search Ticket</a>
                 <a href="mytickets.html">My Tickets</a>
             </div>
-            <div class="logreg">
+            <div class="logreg" id="auth-links">
                 <a href="login.html">Login</a>
                 <a href="register.html">Register</a>
-
             </div>
         </div>
     </nav>
@@ -222,20 +220,27 @@
     </footer>
 
     <script>
-        // Select all nav buttons
-        const navLinks = document.querySelectorAll('.navbtn a');
-    
-        // Add click event listener to each link
-        navLinks.forEach(link => {
-            link.addEventListener('click', function () {
-                // Remove 'active' class from all links
-                navLinks.forEach(nav => nav.classList.remove('active'));
-    
-                // Add 'active' class to the clicked link
-                this.classList.add('active');
+        document.addEventListener("DOMContentLoaded", function () {
+            const authLinks = document.getElementById("auth-links");
+            const token = localStorage.getItem("token");
+
+            if (token) {
+                authLinks.innerHTML = '<a href="#" id="logout">Logout</a>';
+                document.getElementById("logout").addEventListener("click", function () {
+                    localStorage.removeItem("token");
+                    alert("Logout successful!");
+                    window.location.reload();
+                });
+            }
+
+            // Menandai halaman aktif di navbar
+            const navLinks = document.querySelectorAll('.navbtn a');
+            navLinks.forEach(link => {
+                if (link.getAttribute("href") === window.location.pathname.split("/").pop()) {
+                    link.classList.add('active');
+                }
             });
         });
     </script>
-    
 </body>
 </html>
