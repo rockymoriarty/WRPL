@@ -8,6 +8,7 @@ const authRoutes = require("./routes/auth"); // Pastikan path ini sesuai
 
 const app = express();
 const PORT = 3000;
+const ticketRoutes = require("./routes/tickets");
 
 // Middleware
 app.use(express.json());
@@ -17,8 +18,7 @@ app.use(express.static(path.join(__dirname, "../public"))); // Serve static file
 
 // Gunakan routes dari auth.js
 app.use("/auth", authRoutes);
-app.use("/", ticketRoutes); // Tambahkan route tiket
-
+app.use("/api/tickets", ticketRoutes);
 
 // Jalankan server
 app.listen(PORT, () => {

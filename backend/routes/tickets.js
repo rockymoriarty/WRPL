@@ -1,22 +1,28 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../database/db_config"); // Pastikan ini benar
+const db = require("../database/db_config");
 
-// Endpoint untuk mendapatkan tiket yang telah dibeli oleh pengguna
-router.get("/mytickets/:user_id", (req, res) => {
-    const userId = req.params.user_id;
-    
+// Endpoint untuk mendapatkan tiket user berdasarkan user_id
+router.get("/my-tickets/:userId", (req, res) => {
+    const userId = req.params.userId;
+
     const query = `
-        SELECT o.order_id, o.user_id, o.quantity, o.order_date, 
-               t.ticket_id, t.category, t.price, t.status 
-        FROM orders o
-        JOIN tickets t ON o.ticket_id = t.ticket_id
-        WHERE o.user_id = ?;
+        SELECT 
+            concerts.concert_name, 
+            concerts.location, 
+            concerts.concert_date, 
+            tickets.status, 
+            orders.quantity
+        FROM orders
+        JOIN tickets ON orders.ticket_id = tickets.ticket_id
+        JOIN concerts ON tickets.concert_id = concerts.concert_id
+        WHERE orders.user_id = ?;
     `;
 
     db.query(query, [userId], (err, results) => {
         if (err) {
-            return res.status(500).json({ error: "Database error", details: err });
+            console.error("Error fetching user tickets:", err);
+            return res.status(500).json({ message: "Error retrieving tickets" });
         }
         res.json(results);
     });
