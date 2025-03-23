@@ -182,7 +182,7 @@
                 <a href="search.html">Search Ticket</a>
                 <a href="mytickets.html">My Tickets</a>
             </div>
-            <div class="logreg">
+            <div class="logreg" id="auth-links">
                 <a href="login.html">Login</a>
                 <a href="register.html">Register</a>
             </div>
@@ -239,6 +239,28 @@
     </footer>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const authLinks = document.getElementById("auth-links");
+            const token = localStorage.getItem("token");
+
+            if (token) {
+                authLinks.innerHTML = '<a href="#" id="logout">Logout</a>';
+                document.getElementById("logout").addEventListener("click", function () {
+                    localStorage.removeItem("token");
+                    alert("Logout successful!");
+                    window.location.reload();
+                });
+            }
+
+            // Menandai halaman aktif di navbar 
+            const navLinks = document.querySelectorAll('.navbtn a');
+            navLinks.forEach(link => {
+                if (link.getAttribute("href") === window.location.pathname.split("/").pop()) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
         document.addEventListener("DOMContentLoaded", function () {
             const searchForm = document.querySelector('.search-form');
             const concertList = document.querySelector('.concert-list');
