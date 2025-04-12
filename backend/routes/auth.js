@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../database/db_config");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 // REGISTER
 router.post("/register", async (req, res) => {
@@ -12,10 +13,8 @@ router.post("/register", async (req, res) => {
     }
 
     try {
-        // Hash password sebelum disimpan ke database
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Insert ke database dengan Promise untuk menangani async
         const sql = "INSERT INTO customers (name, email, password) VALUES (?, ?, ?)";
         db.query(sql, [fullname, email, hashedPassword], (err, result) => {
             if (err) {
@@ -59,7 +58,13 @@ router.post("/login", (req, res) => {
                 return res.status(401).json({ error: "Incorrect password" });
             }
 
-            res.json({ message: "Login successful", user: { id: user.id, name: user.name, email: user.email } });
+            // Generate JWT token
+            const token = jwt.sign({ user_id: user.user_id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+            // **Munculkan token di terminal**
+            console.log("Generated Token:", token);
+
+            res.json({ message: "Login successful", token, user: { id: user.user_id, name: user.name, email: user.email } });
         });
     } catch (err) {
         console.error("Login Error:", err);

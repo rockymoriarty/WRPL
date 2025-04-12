@@ -270,6 +270,7 @@
                     if (response.ok) {
                         alert("Login successful! 🎉");
                         localStorage.setItem("token", result.token);
+                        localStorage.setItem("currentUser", JSON.stringify(result.user)); // tambahkan ini
                         window.location.href = "index.html";
                     } else {
                         alert("Error: " + (result.error || "Unknown error"));

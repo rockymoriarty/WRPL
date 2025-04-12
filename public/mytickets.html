@@ -237,56 +237,118 @@
     </footer>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const authLinks = document.getElementById("auth-links");
-            const token = localStorage.getItem("token");
+        document.addEventListener("DOMContentLoaded", async function () {
+        const authLinks = document.getElementById("auth-links");
+        const token = localStorage.getItem("token");
 
-            if (token) {
-                authLinks.innerHTML = '<a href="#" id="logout">Logout</a>';
-                document.getElementById("logout").addEventListener("click", function () {
-                    localStorage.removeItem("token");
-                    alert("Logout successful!");
-                    window.location.reload();
-                });
+        function decodeToken(token) {
+            try {
+                const payload = JSON.parse(atob(token.split(".")[1]));
+                return payload.user_id; // Sesuaikan dengan key dalam payload JWT
+            } catch (error) {
+                console.error("Invalid token", error);
+                return null;
+            }
+        }
+
+        let userId = localStorage.getItem("user_id");
+
+        if (token && !userId) {
+            userId = decodeToken(token);
+            if (userId) {
+                localStorage.setItem("user_id", userId);
+            }
+        }
+
+        if (!token || !userId) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        if (token) {
+            authLinks.innerHTML = '<a href="#" id="logout">Logout</a>';
+            document.getElementById("logout").addEventListener("click", function () {
+                localStorage.removeItem("token");
+                localStorage.removeItem("user_id");
+                alert("Logout successful!");
+                window.location.reload();
+            });
+        }
+
+        async function fetchTickets() {
+            const token = localStorage.getItem("token");
+            console.log("Token yang dikirim ke backend:", token);
+
+            if (!token) {
+                console.error("Token tidak ditemukan di localStorage!");
+                return;
             }
 
-            // Menandai halaman aktif di navbar 
-            const navLinks = document.querySelectorAll('.navbtn a');
-            navLinks.forEach(link => {
-                if (link.getAttribute("href") === window.location.pathname.split("/").pop()) {
-                    link.classList.add('active');
+            // Add more detailed error reporting
+            try {
+                const response = await fetch("http://localhost:3000/api/orders/user", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                if (response.status === 401) {
+                    // Token expired or invalid
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("user_id");
+                    alert("Your session has expired. Please login again.");
+                    window.location.href = "login.html";
+                    return;
                 }
-            });
-        });
 
-        // Data tiket
-        let tickets = [
-            { id: 1, title: "Konser Pop Nasional", location: "Jakarta", date: "25 Desember 2023", status: "Active" },
-            { id: 2, title: "Rock Festival 2023", location: "Bandung", date: "30 Desember 2023", status: "Canceled" }
-        ];
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(`Gagal mengambil tiket: ${response.status} ${errorData.message || ''}`);
+                }
 
-        // Fungsi untuk menampilkan tiket
-        function renderTickets() {
-            const myOrdersContainer = document.getElementById('myOrders');
-            const canceledOrdersContainer = document.getElementById('canceledOrders');
+                const data = await response.json();
+                console.log("Data tiket yang diterima:", data);
+                renderTickets(data);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+
+
+        function renderTickets(data) {
+            // Extract the tickets array from the data object
+            const tickets = data.tickets || [];
+            
+            const myOrdersContainer = document.getElementById("myOrders");
+            const canceledOrdersContainer = document.getElementById("canceledOrders");
 
             myOrdersContainer.innerHTML = '<h2>My Orders</h2>';
             canceledOrdersContainer.innerHTML = '<h2>Canceled Orders</h2>';
 
+            if (tickets.length === 0) {
+                myOrdersContainer.innerHTML += "<p>Tidak ada tiket yang tersedia.</p>";
+                return;
+            }
+
             tickets.forEach(ticket => {
-                const ticketElement = document.createElement('div');
-                ticketElement.classList.add('ticket-item');
+                const ticketElement = document.createElement("div");
+                ticketElement.classList.add("ticket-item");
                 ticketElement.innerHTML = `
-                    <h3>${ticket.title}</h3>
+                    <h3>${ticket.concert_name}</h3>
                     <p>Lokasi: ${ticket.location}</p>
-                    <p>Tanggal: ${ticket.date}</p>
+                    <p>Tanggal: ${new Date(ticket.concert_date).toLocaleDateString("id-ID")}</p>
+                    <p>Jumlah: ${ticket.quantity}</p>
+                    <p>Kategori: ${ticket.ticket_type}</p>
                     <p>Status: ${ticket.status}</p>
                 `;
 
-                if (ticket.status === 'Active') {
-                    const cancelButton = document.createElement('button');
-                    cancelButton.textContent = 'Cancel Ticket';
-                    cancelButton.addEventListener('click', () => showCancelPopup(ticket.id));
+                if (ticket.status === "Active") {
+                    const cancelButton = document.createElement("button");
+                    cancelButton.textContent = "Cancel Ticket";
+                    cancelButton.addEventListener("click", () => cancelTicket(ticket.order_id));
                     ticketElement.appendChild(cancelButton);
                     myOrdersContainer.appendChild(ticketElement);
                 } else {
@@ -295,59 +357,48 @@
             });
         }
 
-        // Fungsi untuk menampilkan pop-up
-        let ticketToCancel = null;
-        function showCancelPopup(ticketId) {
-            ticketToCancel = ticketId;
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('cancelPopup').style.display = 'block';
-        }
+        async function cancelTicket(ticketId) {
+            const token = localStorage.getItem("token");
 
-        // Fungsi untuk menyembunyikan pop-up
-        function hideCancelPopup() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('cancelPopup').style.display = 'none';
-            ticketToCancel = null;
-        }
-
-        // Event listener untuk tombol konfirmasi dan batal
-        document.getElementById('confirmCancel').addEventListener('click', () => {
-            if (ticketToCancel) {
-                const ticket = tickets.find(t => t.id === ticketToCancel);
-                if (ticket) {
-                    ticket.status = 'Canceled';
-                    renderTickets();
-                    showTab('canceledOrders'); // Pindah ke tab Canceled Orders
-                }
-                hideCancelPopup();
+            if (!token) {
+                alert("Anda harus login.");
+                return;
             }
-        });
 
-        document.getElementById('cancelCancel').addEventListener('click', hideCancelPopup);
+            try {
+                const response = await fetch(`/api/orders/cancel/${ticketId}`, {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
 
-        // Fungsi untuk mengganti tab
-        function showTab(tabId) {
-            const tabs = document.querySelectorAll('.tab');
-            const contents = document.querySelectorAll('.content');
+                if (!response.ok) throw new Error("Gagal membatalkan tiket.");
 
-            tabs.forEach(tab => tab.classList.remove('active'));
-            contents.forEach(content => content.classList.remove('active'));
-
-            document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
-            document.getElementById(tabId).classList.add('active');
+                alert("Tiket berhasil dibatalkan.");
+                fetchTickets(); // Refresh tampilan
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Terjadi kesalahan saat membatalkan tiket.");
+            }
         }
 
-        // Navigasi aktif
-        const navLinks = document.querySelectorAll('.navbtn a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function () {
-                navLinks.forEach(nav => nav.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
+        window.showTab = function(tabId) {
+            document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+            document.querySelectorAll(".content").forEach(content => content.classList.remove("active"));
 
-        // Render tiket saat halaman dimuat
-        renderTickets();
+            document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add("active");
+            document.getElementById(tabId).classList.add("active");
+        };
+
+
+        console.log("Token yang diterima di backend:", token);
+        
+
+
+        fetchTickets();
+    });
+
     </script>
 </body>
 </html>

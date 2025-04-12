@@ -339,7 +339,6 @@
         }
     </style>
 </head>
-
 <body>
     <nav>
         <!-- Copy navbar dari search.html -->
@@ -361,86 +360,246 @@
                     <option value="regular">Regular</option>
                     <option value="earlybird">Early Bird</option>
                 </select>
-                <form id="paymentForm">
-                    <h3>Payment Method</h3>
-                    <select id="paymentMethod">
-                        <option value="credit">Credit Card</option>
-                        <option value="debit">Debit Card</option>
-                        <option value="paypal">PayPal</option>
-                    </select>
-                    <button type="button" id="payButton">Pay</button>
-                </form>
             </div>
-            <div id="overlay"></div>
-            <div id="paymentPopup">
-                <h3>Payment Details</h3>
-                <p id="popupTitle"></p>
-                <p id="popupPrice"></p>
-                <p id="popupMethod"></p>
-                <button id="confirmPayment">Confirm Payment</button>
-                <button id="cancelPayment">Cancel</button>
-            </div>
-            <footer>
-                <p>Copyright 2025 WRPL</p>
-            </footer>
-            <script>
-                const selectedTicket = JSON.parse(localStorage.getItem('selectedTicket'));
-                if (selectedTicket) {
-                    document.getElementById('ticketTitle').textContent = selectedTicket.title;
-                    document.getElementById('ticketLocation').textContent = selectedTicket.location;
-                    document.getElementById('ticketDate').textContent = selectedTicket.date;
-                    // document.getElementById('ticketPrice').textContent = `Price: ${selectedTicket.price}`;
+            <h3>Quantity</h3>
+            <input type="number" id="ticketQuantity" min="1" value="1">
+            
+            <h3>Payment Method</h3>
+            <select id="paymentMethod">
+                <option value="credit">Credit Card</option>
+                <option value="debit">Debit Card</option>
+                <option value="paypal">PayPal</option>
+            </select>
+            <button type="button" id="payButton">Pay</button>
+        </form>
+    </div>
+    
+    <div id="overlay"></div>
+    <div id="paymentPopup">
+        <h3>Payment Details</h3>
+        <p id="popupTitle"></p>
+        <p id="popupPrice"></p>
+        <p id="popupQuantity"></p>
+        <p id="popupMethod"></p>
+        <button id="confirmPayment">Confirm Payment</button>
+        <button id="cancelPayment">Cancel</button>
+    </div>
+    
+    <footer>
+        <p>Copyright 2025 WRPL</p>
+    </footer>
+    
+    <script>
+        // Ambil parameter ID dari URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const concertId = urlParams.get('id');
+        let ticketId = null; // Variable untuk menyimpan ticket_id
+        let selectedTicket = {};
+        
+        // Ambil data user dari localStorage (diasumsikan user sudah login)
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        
+        // Fungsi untuk mengambil detail konser dari API
+        async function fetchConcertDetails() {
+            try {
+                const response = await fetch(`/api/concerts/${concertId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch concert details');
                 }
-
-                function showPaymentPopup() {
-                    const method = document.getElementById('paymentMethod').value;
-                    const ticketType = document.getElementById('ticketType').value;
-
-                    // Update harga berdasarkan jenis tiket
-                    let price;
-                    switch (ticketType) {
-                        case 'vip':
-                            price = 'Rp 1.500.000';
-                            break;
-                        case 'festival':
-                            price = 'Rp 1.000.000';
-                            break;
-                        case 'regular':
-                            price = 'Rp 750.000';
-                            break;
-                        case 'earlybird':
-                            price = 'Rp 500.000';
-                            break;
-                        default:
-                            price = 'Rp 500.000';
-                    }
-
-                    selectedTicket.price = price;
-
-                    document.getElementById('popupTitle').textContent = `Tiket: ${selectedTicket.title}`;
-                    document.getElementById('popupPrice').textContent = `Harga: ${selectedTicket.price}`;
-                    document.getElementById('popupMethod').textContent = `Metode: ${method}`;
-                    document.getElementById('overlay').style.display = 'block';
-                    document.getElementById('paymentPopup').style.display = 'block';
+                
+                const concertData = await response.json();
+                displayConcertDetails(concertData);
+                // Mengambil ticket_id untuk konser ini (asumsi: tiket sudah ada di database)
+                fetchTicketId(concertId);
+                
+                // Simpan data konser yang dipilih
+                selectedTicket = {
+                    concert_id: concertData.concert_id,
+                    title: concertData.concert_name,
+                    location: concertData.location,
+                    date: formatDate(concertData.concert_date)
+                };
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to load concert details. Please try again later.');
+            }
+        }
+        
+        // Ambil ticket_id berdasarkan concert_id
+        async function fetchTicketId(concertId) {
+            try {
+                // Asumsi: endpoint untuk mengambil tiket berdasarkan concert_id
+                const response = await fetch(`/api/orders/concert/${concertId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch ticket details');
                 }
-
-                function hidePaymentPopup() {
-                    document.getElementById('overlay').style.display = 'none';
-                    document.getElementById('paymentPopup').style.display = 'none';
-                    // Alihkan kembali ke halaman ticket-detail.html
-                    window.location.href = 'ticket-detail.html';
+                
+                const ticketData = await response.json();
+                if (ticketData && ticketData.length > 0) {
+                    ticketId = ticketData[0].ticket_id;
+                } else {
+                    console.warn('No tickets found for this concert');
                 }
+            } catch (error) {
+                console.error('Error fetching ticket ID:', error);
+                // Fallback jika tidak ada endpoint, kita bisa membuat simulasi ticket_id
+                // HANYA UNTUK DEMO, hapus pada implementasi sebenarnya
+                ticketId = concertId; // Anggap saja ticket_id sama dengan concert_id untuk demo
+            }
+        }
+        
+        // Fungsi untuk menampilkan detail konser
+        function displayConcertDetails(concert) {
+            document.getElementById('ticketTitle').textContent = concert.concert_name;
+            document.getElementById('ticketLocation').textContent = `Location: ${concert.location}, Indonesia`;
+            document.getElementById('ticketDate').textContent = `Date: ${formatDate(concert.concert_date)}`;
+        }
+        
+        // Format tanggal
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const day = date.getDate();
+            const monthNames = [
+                'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+            ];
+            const month = monthNames[date.getMonth()];
+            const year = date.getFullYear();
+            
+            return `${day} ${month} ${year}`;
+        }
 
-                document.getElementById('payButton').addEventListener('click', showPaymentPopup);
-                document.getElementById('confirmPayment').addEventListener('click', () => {
-                    let myTickets = JSON.parse(localStorage.getItem('myTickets')) || [];
-                    myTickets.push({ ...selectedTicket, status: 'Active' });
-                    localStorage.setItem('myTickets', JSON.stringify(myTickets));
-                    hidePaymentPopup();
-                    window.location.href = 'mytickets.html';
+        // Tampilkan popup pembayaran
+        function showPaymentPopup() {
+            const method = document.getElementById('paymentMethod').value;
+            const ticketType = document.getElementById('ticketType').value;
+            const quantity = document.getElementById('ticketQuantity').value;
+
+            // Update harga berdasarkan jenis tiket
+            let price;
+            let priceValue; // Nilai numerik untuk disimpan
+            switch (ticketType) {
+                case 'vip':
+                    price = 'Rp 1.500.000';
+                    priceValue = 1500000;
+                    break;
+                case 'festival':
+                    price = 'Rp 1.000.000';
+                    priceValue = 1000000;
+                    break;
+                case 'regular':
+                    price = 'Rp 750.000';
+                    priceValue = 750000;
+                    break;
+                case 'earlybird':
+                    price = 'Rp 500.000';
+                    priceValue = 500000;
+                    break;
+                default:
+                    price = 'Rp 500.000';
+                    priceValue = 500000;
+            }
+
+            selectedTicket.price = price;
+            selectedTicket.priceValue = priceValue;
+            selectedTicket.quantity = quantity;
+            selectedTicket.ticketType = ticketType;
+
+            document.getElementById('popupTitle').textContent = `Tiket: ${selectedTicket.title}`;
+            document.getElementById('popupPrice').textContent = `Harga: ${selectedTicket.price}`;
+            document.getElementById('popupQuantity').textContent = `Jumlah: ${quantity}`;
+            document.getElementById('popupMethod').textContent = `Metode: ${method}`;
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('paymentPopup').style.display = 'block';
+        }
+
+        // Sembunyikan popup pembayaran
+        function hidePaymentPopup() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('paymentPopup').style.display = 'none';
+        }
+
+        // Kirim pesanan ke database
+        async function saveOrderToDatabase() {
+            // Cek apakah user sudah login
+            if (!currentUser || !currentUser.id) {
+                alert('Anda harus login terlebih dahulu');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Cek apakah ticket_id ada
+            if (!ticketId) {
+                alert('Ticket ID tidak ditemukan');
+                return;
+            }
+            
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('No authentication token found');
+                }
+                
+                const orderData = {
+                    ticket_id: ticketId,
+                    quantity: parseInt(selectedTicket.quantity)
+                };
+                
+                const response = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(orderData)
                 });
-                document.getElementById('cancelPayment').addEventListener('click', hidePaymentPopup);
-            </script>
+                
+                if (!response.ok) {
+                    throw new Error('Failed to save order');
+                }
+                
+                const result = await response.json();
+                console.log('Order created:', result);
+                
+                // Simpan juga di localStorage untuk tampilan (opsional, tergantung kebutuhan)
+                let myTickets = JSON.parse(localStorage.getItem('myTickets')) || [];
+                myTickets.push({ 
+                    ...selectedTicket, 
+                    status: 'Active',
+                    order_id: result.order_id,
+                    order_date: result.order_date
+                });
+                localStorage.setItem('myTickets', JSON.stringify(myTickets));
+                
+                alert('Pembayaran berhasil!');
+                window.location.href = 'mytickets.html';
+                
+            } catch (error) {
+                console.error('Error saving order:', error);
+                alert('Gagal menyimpan pesanan: ' + error.message);
+            }
+
+            console.log("Token:", token);
+            console.log("Current User:", currentUser);
+            console.log("Ticket ID:", ticketId);
+
+        }
+
+        // Event listener
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch concert details when page loads
+            if (concertId) {
+                fetchConcertDetails();
+            } else {
+                alert('No concert ID provided');
+                window.location.href = 'search.html';
+            }
+            
+            document.getElementById('payButton').addEventListener('click', showPaymentPopup);
+            document.getElementById('confirmPayment').addEventListener('click', saveOrderToDatabase);
+            document.getElementById('cancelPayment').addEventListener('click', hidePaymentPopup);
+        });
+    </script>
 </body>
 
 </html>

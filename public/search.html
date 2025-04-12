@@ -199,97 +199,88 @@
             </select>
             <button type="submit">Search</button>
         </form>
-
-        <div class="concert-list">
-            <div class="concert-item" data-category="Bali">
-                <h3>NIKI Buzz Tour</h3>
-                <p>Location: Bali, Indonesia</p>
-                <p>Date: 20 Februari 2025</p>
-                <button>Buy Ticket</button>
-            </div>
-            </div>
-            <div class="concert-item" data-category="Jakarta">
-                <h3>Taylor Swift Eras Tour</h3>
-                <p>Location: Jakarta, Indonesia</p>
-                <p>Date: 25 Februari 2025</p>
-                <button>Buy Ticket</button>
-            </div>
-            <div class="concert-item" data-category="Bali">
-                <h3>Green Day The Saviours Tour</h3>
-                <p>Location: Bali, Indonesia</p>
-                <p>Date: 17 Februari 2025</p>
-                <button>Buy Ticket</button>
-            </div>
-            <div class="concert-item" data-category="Bandung">
-                <h3>Guns N' Roses World Tour</h3>
-                <p>Location: Bandung, Indonesia</p>
-                <p>Date: 15 Februari 2025</p>
-                <button>Buy Ticket</button>
-            </div>
-            <div class="concert-item" data-category="Bandung">
-                <h3>Alraiz Tour</h3>
-                <p>Location: Bandung, Indonesia</p>
-                <p>Date: 21 Februari 2025</p>
-                <button>Buy Ticket</button>
-            </div>
+        <div class="concert-list">        
         </div>
     </div>
     <footer>
         <p>Copyright 2025 WRPL</p>
     </footer>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const authLinks = document.getElementById("auth-links");
-            const token = localStorage.getItem("token");
+    <!-- Tambahkan script berikut di search.html atau ubah script yang sudah ada -->
+<script>
+    // Kode JavaScript untuk ditambahkan/perbarui di search.html
 
-            if (token) {
-                authLinks.innerHTML = '<a href="#" id="logout">Logout</a>';
-                document.getElementById("logout").addEventListener("click", function () {
-                    localStorage.removeItem("token");
-                    alert("Logout successful!");
-                    window.location.reload();
-                });
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Halaman dimuat, mengambil data konser...');
+    
+    // Panggil API dengan path yang benar
+    fetch('/api/concerts')
+        .then(response => {
+            console.log('Status response:', response.status);
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.status);
             }
-
-            // Menandai halaman aktif di navbar 
-            const navLinks = document.querySelectorAll('.navbtn a');
-            navLinks.forEach(link => {
-                if (link.getAttribute("href") === window.location.pathname.split("/").pop()) {
-                    link.classList.add('active');
-                }
-            });
+            return response.json();
+        })
+        .then(concerts => {
+            console.log('Data konser diterima:', concerts);
+            displayConcerts(concerts);
+        })
+        .catch(error => {
+            console.error('Error fetching concert data:', error);
+            document.querySelector('.concert-list').innerHTML = 
+                '<p>Maaf, daftar konser tidak dapat dimuat saat ini. Error: ' + error.message + '</p>';
         });
+});
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const searchForm = document.querySelector('.search-form');
-            const concertList = document.querySelector('.concert-list');
-            const concertItems = document.querySelectorAll('.concert-item');
-            const concertSelect = document.getElementById('concert-select');
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const monthNames = [
+        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    const month = monthNames[date.getMonth()];
+    const year = date.getFullYear();
+    
+    return `${day} ${month} ${year}`;
+}
 
-            searchForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-                concertList.style.display = 'block';
+function displayConcerts(concerts) {
+    const concertListElement = document.querySelector('.concert-list');
+    
+    if (!concertListElement) {
+        console.error('Element .concert-list tidak ditemukan!');
+        return;
+    }
+    
+    concertListElement.innerHTML = ''; // Bersihkan daftar yang ada
+    
+    if (concerts.length === 0) {
+        concertListElement.innerHTML = '<p>Tidak ada konser yang tersedia saat ini.</p>';
+        return;
+    }
+    
+    concerts.forEach(concert => {
+        // Buat elemen konser
+        const concertItem = document.createElement('div');
+        concertItem.className = 'concert-item';
+        concertItem.setAttribute('data-category', concert.location);
+        
+        concertItem.innerHTML = `
+            <h3>${concert.concert_name}</h3>
+            <p>Location: ${concert.location}, Indonesia</p>
+            <p>Date: ${formatDate(concert.concert_date)}</p>
+            <button onclick="buyTicket(${concert.concert_id})">Buy Ticket</button>
+        `;
+        
+        concertListElement.appendChild(concertItem);
+    });
+}
 
-                const selectedCategory = concertSelect.value;
-                concertItems.forEach(item => {
-                    item.style.display = (selectedCategory === "all" || item.dataset.category === selectedCategory) ? 'flex' : 'none';
-                });
-            });
-        });
-
-        const buyButtons = document.querySelectorAll('.concert-item button');
-        buyButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const concertItem = this.parentElement;
-                const title = concertItem.querySelector('h3').textContent;
-                const location = concertItem.querySelector('p:nth-child(2)').textContent;
-                const date = concertItem.querySelector('p:nth-child(3)').textContent;
-                const price = 'Rp 500.000'; // Harga statis untuk contoh
-                localStorage.setItem('selectedTicket', JSON.stringify({ title, location, date, price }));
-                window.location.href = 'ticket-detail.html';
-            });
-        });
+function buyTicket(concertId) {
+    window.location.href = `/ticket-detail.html?id=${concertId}`;
+}
     </script>
     
 </body>
