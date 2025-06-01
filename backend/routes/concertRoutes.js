@@ -21,21 +21,6 @@ router.get("/", (req, res) => {
   });
 });
 
-router.get('/concert/:concert_id', (req, res) => {
-  const concertId = req.params.concert_id;
-  const query = 'SELECT * FROM tickets WHERE concert_id = ?';
-
-  db.query(query, [concertId], (err, results) => {
-      if (err) {
-          console.error('Error fetching tickets by concert ID:', err);
-          return res.status(500).json({ error: 'Internal server error' });
-      }
-
-      res.json(results);
-  });
-});
-
-
 // Route untuk mendapatkan detail konser berdasarkan ID
 router.get("/:id", (req, res) => {
   const concertId = req.params.id;

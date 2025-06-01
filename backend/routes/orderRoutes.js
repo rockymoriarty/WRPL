@@ -75,8 +75,6 @@ router.post("/cancel/:order_id", verifyToken, (req, res) => {
 });
 
 // Endpoint untuk mendapatkan order berdasarkan user_id
-
-// Endpoint untuk mendapatkan order berdasarkan user_id
 router.get("/user", verifyToken, (req, res) => {
   const user_id = req.user.id;
 

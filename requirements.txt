@@ -1,0 +1,1 @@
+gunakan node js, jalankan command "node server.js" di terminal dengan directory backend. Gunakan database concertrev5 tanpa mengubah nama database

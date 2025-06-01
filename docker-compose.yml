@@ -1,33 +1,34 @@
-version: "3.8"
-
 services:
   app:
     build: .
+    image: adinnhd/tixvibe:latest
     ports:
-      - "80:3000"
-    environment:
-      PORT: 3000
-     
-      DB_HOST: db 
-      DB_USER: root
-      DB_PASSWORD: "" 
-      DB_DATABASE: concertrev5 
-      JWT_SECRET: rahasiaSuperAman123 
+      - "3000:3000"
+    volumes:
+      - ./backend:/usr/src/app
+      - ./public:/usr/src/public
+      - /usr/src/app/node_modules
     depends_on:
       - db
-    restart: always
+    environment:
+      - DB_HOST=db
+      - DB_USER=root # Or your preferred user
+      - DB_PASSWORD=password # Choose a strong password
+      - DB_NAME=concertrev5 # Or your preferred database name
 
   db:
     image: mysql:8.0
+    cap_add:
+      - SYS_NICE # Fix for MySQL 8 performance issues
+    restart: always
     ports:
-      - "3306:3306" 
-    environment:
-      MYSQL_ROOT_PASSWORD: "" 
-      MYSQL_DATABASE: concertrev5 
-      MYSQL_USER: root 
-      MYSQL_PASSWORD: "" 
+      - "3307:3306"
     volumes:
+      - ./concertrev5.sql:/docker-entrypoint-initdb.d/concertrev5.sql
       - db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password # Choose a strong password
+      MYSQL_DATABASE: concertrev5 # Or your preferred database name
 
 volumes:
-  db_data:
+  db_data: 

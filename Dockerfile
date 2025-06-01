@@ -1,21 +1,13 @@
-# STEP 1: MEMILIH BASE IMAGE
-FROM node:22-alpine
+FROM node:18-alpine
 
-# STEP 2: SET WORKING DIRECTORY
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# STEP 3: SALIN FILE MANIFEST DEPENDENSI
-COPY package.json ./
-COPY package-lock.json ./
+COPY package*.json ./
 
-# STEP 4: INSTAL DEPENDENSI PROJECT
-RUN npm install --production
+RUN npm install
 
-# STEP 5: SALIN SISA KODE PROJECT
-COPY . .
+COPY ./backend /usr/src/app
 
-# STEP 6: EXPOSE PORT
 EXPOSE 3000
 
-# STEP 7: DEFINISIKAN COMMAND UNTUK MENJALANKAN APLIKASI
-CMD ["node", "backend/server.js"]
+CMD [ "node", "server.js" ] 

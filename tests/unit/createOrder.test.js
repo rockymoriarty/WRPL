@@ -1,69 +1,116 @@
-const request = require("supertest");
-const express = require("express");
-const orderRoutes = require("../../../backend/routes/order");
+// tests/auth.test.js
 
-jest.mock("../../../backend/database/db_config", () => ({
+const request = require('supertest');
+const express = require('express');
+const authRoutes = require('../../backend/routes/auth');
+
+// Mock dependencies
+jest.mock('../../backend/database/db_config', () => ({
   query: jest.fn(),
 }));
-const db = require("../../../backend/database/db_config");
 
-// Mock middleware verifyToken agar langsung melewati autentikasi
-jest.mock("../../../backend/middleware/verifyToken", () =>
-  (req, res, next) => {
-    req.user = { id: 1 }; // Mocked user
-    next();
-  }
-);
-
-// Setup Express app
+const db = require('../../backend/database/db_config');
 const app = express();
 app.use(express.json());
-app.use("/", orderRoutes);
+app.use('/api/auth', authRoutes);
 
-describe("POST / (Create Order)", () => {
-  beforeEach(() => {
+// Mock JWT secret
+process.env.JWT_SECRET = 'test_secret';
+
+describe('Auth Routes', () => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should return 400 if ticket_id or quantity is missing or invalid", async () => {
-    const res = await request(app).post("/").send({
-      ticket_id: null,
-      quantity: 0,
+  describe('POST /register', () => {
+    it('should return 400 if fields are missing', async () => {
+      const res = await request(app).post('/api/auth/register').send({});
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'All fields are required!');
     });
 
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("error", expect.any(String));
+    it('should return 201 on successful registration', async () => {
+      db.query.mockImplementation((sql, params, callback) => {
+        callback(null, { insertId: 1 });
+      });
+
+      const res = await request(app).post('/api/auth/register').send({
+        fullname: 'John Doe',
+        email: 'john@example.com',
+        password: 'password123',
+      });
+
+      expect(res.statusCode).toBe(201);
+      expect(res.body).toHaveProperty('message', 'User registered successfully!');
+    });
+
+    it('should return 500 on database error', async () => {
+      db.query.mockImplementation((sql, params, callback) => {
+        callback(new Error('DB error'), null);
+      });
+
+      const res = await request(app).post('/api/auth/register').send({
+        fullname: 'John Doe',
+        email: 'john@example.com',
+        password: 'password123',
+      });
+
+      expect(res.statusCode).toBe(500);
+      expect(res.body).toHaveProperty('error', 'Internal server error');
+    });
   });
 
-  it("should return 500 if DB error occurs", async () => {
-    db.query.mockImplementationOnce((query, values, callback) => {
-      callback(new Error("DB insert error"), null);
+  describe('POST /login', () => {
+    it('should return 400 if email or password is missing', async () => {
+      const res = await request(app).post('/api/auth/login').send({});
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'Email and password are required!');
     });
 
-    const res = await request(app).post("/").send({
-      ticket_id: 123,
-      quantity: 2,
+    it('should return 401 if user not found', async () => {
+      db.query.mockImplementation((sql, params, callback) => {
+        callback(null, []);
+      });
+
+      const res = await request(app).post('/api/auth/login').send({
+        email: 'notfound@example.com',
+        password: 'somepassword',
+      });
+
+      expect(res.statusCode).toBe(401);
+      expect(res.body).toHaveProperty('error', 'User not found');
     });
 
-    expect(res.statusCode).toBe(500);
-    expect(res.body).toHaveProperty("error", "Failed to create order");
-  });
+    it('should return 401 if password is incorrect', async () => {
+      db.query.mockImplementation((sql, params, callback) => {
+        callback(null, [{ user_id: 1, name: 'User', email: 'user@example.com', password: '$2a$10$wronghash' }]);
+      });
 
-  it("should return 201 and order_id if order creation succeeds", async () => {
-    db.query.mockImplementationOnce((query, values, callback) => {
-      callback(null, { insertId: 10 });
+      const res = await request(app).post('/api/auth/login').send({
+        email: 'user@example.com',
+        password: 'wrongpassword',
+      });
+
+      expect(res.statusCode).toBe(401);
+      expect(res.body).toHaveProperty('error', 'Incorrect password');
     });
 
-    const res = await request(app).post("/").send({
-      ticket_id: 123,
-      quantity: 2,
-    });
+    it('should return token if login is successful', async () => {
+      const bcrypt = require('bcryptjs');
+      const hashedPassword = await bcrypt.hash('correctpassword', 10);
 
-    expect(res.statusCode).toBe(201);
-    expect(res.body).toMatchObject({
-      message: "Order created successfully",
-      order_id: 10,
-      order_date: expect.any(String),
+      db.query.mockImplementation((sql, params, callback) => {
+        callback(null, [{ user_id: 1, name: 'User', email: 'user@example.com', password: hashedPassword }]);
+      });
+
+      const res = await request(app).post('/api/auth/login').send({
+        email: 'user@example.com',
+        password: 'correctpassword',
+      });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveProperty('token');
+      expect(res.body).toHaveProperty('message', 'Login successful');
     });
   });
 });
