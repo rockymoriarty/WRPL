@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  database:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: wrpl_db
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - wrpl-net
+
+  backend:
+    build: 
+      context: .          # ⬅️ build context dari root
+      dockerfile: ./backend/Dockerfile
+    container_name: wrpl-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=database
+      - DB_USER=appuser
+      - DB_PASSWORD=apppassword
+      - DB_NAME=wrpl_db
+    depends_on:
+      - database
+    networks:
+      - wrpl-net
+
+  frontend:
+    build: 
+      context: .          # ⬅️ build context dari root
+      dockerfile: ./public/Dockerfile
+    container_name: wrpl-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - wrpl-net
+
+volumes:
+  db_data:
+
+networks:
+  wrpl-net:
+    driver: bridge
