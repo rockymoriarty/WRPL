@@ -6,7 +6,7 @@ COPY package*.json ./
 
 RUN npm install
 
-COPY ./backend /usr/src/app
+COPY ./src/backend /usr/src/app
 
 EXPOSE 3000
 
