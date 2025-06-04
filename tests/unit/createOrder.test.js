@@ -2,14 +2,14 @@
 
 const request = require('supertest');
 const express = require('express');
-const authRoutes = require('../../backend/routes/auth');
+const authRoutes = require('../../src/backend/routes/auth');
 
 // Mock dependencies
-jest.mock('../../backend/database/db_config', () => ({
-  query: jest.fn(),
+jest.mock('../../src/backend/database/db_config', () => ({
+  query: jest.fn()
 }));
 
-const db = require('../../backend/database/db_config');
+const db = require('../../src/backend/database/db_config');
 const app = express();
 app.use(express.json());
 app.use('/api/auth', authRoutes);
@@ -37,7 +37,7 @@ describe('Auth Routes', () => {
       const res = await request(app).post('/api/auth/register').send({
         fullname: 'John Doe',
         email: 'john@example.com',
-        password: 'password123',
+        password: 'password123'
       });
 
       expect(res.statusCode).toBe(201);
@@ -52,7 +52,7 @@ describe('Auth Routes', () => {
       const res = await request(app).post('/api/auth/register').send({
         fullname: 'John Doe',
         email: 'john@example.com',
-        password: 'password123',
+        password: 'password123'
       });
 
       expect(res.statusCode).toBe(500);
@@ -74,7 +74,7 @@ describe('Auth Routes', () => {
 
       const res = await request(app).post('/api/auth/login').send({
         email: 'notfound@example.com',
-        password: 'somepassword',
+        password: 'somepassword'
       });
 
       expect(res.statusCode).toBe(401);
@@ -83,12 +83,14 @@ describe('Auth Routes', () => {
 
     it('should return 401 if password is incorrect', async () => {
       db.query.mockImplementation((sql, params, callback) => {
-        callback(null, [{ user_id: 1, name: 'User', email: 'user@example.com', password: '$2a$10$wronghash' }]);
+        callback(null, [
+          { user_id: 1, name: 'User', email: 'user@example.com', password: '$2a$10$wronghash' }
+        ]);
       });
 
       const res = await request(app).post('/api/auth/login').send({
         email: 'user@example.com',
-        password: 'wrongpassword',
+        password: 'wrongpassword'
       });
 
       expect(res.statusCode).toBe(401);
@@ -100,12 +102,14 @@ describe('Auth Routes', () => {
       const hashedPassword = await bcrypt.hash('correctpassword', 10);
 
       db.query.mockImplementation((sql, params, callback) => {
-        callback(null, [{ user_id: 1, name: 'User', email: 'user@example.com', password: hashedPassword }]);
+        callback(null, [
+          { user_id: 1, name: 'User', email: 'user@example.com', password: hashedPassword }
+        ]);
       });
 
       const res = await request(app).post('/api/auth/login').send({
         email: 'user@example.com',
-        password: 'correctpassword',
+        password: 'correctpassword'
       });
 
       expect(res.statusCode).toBe(200);
