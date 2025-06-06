@@ -402,7 +402,7 @@
         // Fungsi untuk mengambil detail konser dari API
         async function fetchConcertDetails() {
             try {
-                const response = await fetch(`/api/concerts/${concertId}`);
+                const response = await fetch(`https://wrpl-production.up.railway.app/api/concerts/${concertId}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch concert details');
                 }
@@ -429,7 +429,7 @@
         async function fetchTicketId(concertId) {
             try {
                 // Asumsi: endpoint untuk mengambil tiket berdasarkan concert_id
-                const response = await fetch(`/api/orders/concert/${concertId}`);
+                const response = await fetch(`https://wrpl-production.up.railway.app/api/orders/concert/${concertId}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch ticket details');
                 }
@@ -545,7 +545,7 @@
                     quantity: parseInt(selectedTicket.quantity)
                 };
                 
-                const response = await fetch('/api/orders', {
+                const response = await fetch('https://wrpl-production.up.railway.app/api/orders', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

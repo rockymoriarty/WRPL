@@ -1,19 +1,32 @@
-const mysql = require('mysql');
-require('dotenv').config(); // Ensure environment variables are loaded
+const mysql = require('mysql2'); 
+require('dotenv').config();
 
-const dbConfig = {
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'concertrev5',
-  connectTimeout: 10000 // Optional: Increase connection timeout
-};
+let db;
 
-const db = mysql.createConnection(dbConfig);
+if (process.env.DATABASE_URL) {
+  // Koneksi pakai URL (cocok buat Railway)
+  db = mysql.createConnection(process.env.DATABASE_URL);
+} else {
+  // Koneksi pakai konfigurasi terpisah (lokal/development)
+  const dbConfig = {
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    connectTimeout: 10000
+  };
+
+  if (!dbConfig.host || !dbConfig.user || !dbConfig.password || !dbConfig.database) {
+    console.error('❌ ERROR: DB environment variables are missing.');
+    process.exit(1);
+  }
+
+  db = mysql.createConnection(dbConfig);
+}
 
 let connectAttempts = 0;
 const maxConnectAttempts = 5;
-const retryDelay = 3000; // 3 seconds
+const retryDelay = 3000;
 
 function handleDisconnect() {
   console.log('Attempting to connect to database...');
@@ -22,32 +35,27 @@ function handleDisconnect() {
       console.error('Database connection failed:', err);
       connectAttempts++;
       if (connectAttempts < maxConnectAttempts) {
-        console.log(
-          `Retrying connection in ${retryDelay / 1000} seconds... (Attempt ${connectAttempts}/${maxConnectAttempts})`
-        );
+        console.log(`Retrying in ${retryDelay / 1000}s... (Attempt ${connectAttempts}/${maxConnectAttempts})`);
         setTimeout(handleDisconnect, retryDelay);
       } else {
-        console.error('Max connection attempts reached. Could not connect to the database.');
+        console.error('Max connection attempts reached.');
       }
       return;
     }
-    console.log('Connected to MySQL database');
-    connectAttempts = 0; // Reset on successful connection
+    console.log('✅ Connected to MySQL database');
+    connectAttempts = 0;
   });
 
-  db.on('error', function (err) {
+  db.on('error', err => {
     console.error('Database error:', err);
     if (err.code === 'PROTOCOL_CONNECTION_LOST' || err.code === 'ECONNRESET') {
-      console.log('Reconnecting due to lost connection or reset...');
-      // For persistent connections, you might re-initialize the connection object here
-      // or use a connection pool which handles this better.
-      // For this script, we'll just log and expect manual restart if needed after initial connect.
+      console.log('🔄 Reconnecting...');
     } else {
       throw err;
     }
   });
 }
 
-handleDisconnect(); // Initial connection attempt
+handleDisconnect();
 
-module.exports = db; // Export koneksi agar bisa dipakai di file lain
+module.exports = db;
