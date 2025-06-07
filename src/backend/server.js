@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use(express.static(path.join(__dirname, '../public'))); // Serve static files dari folder public
+//app.use(express.static(path.join(__dirname, '../public'))); // Serve static files dari folder public
 
 // Log untuk debugging
 console.log('JWT Secret Key:', process.env.JWT_SECRET || 'JWT_SECRET is undefined!');
@@ -31,9 +31,9 @@ app.get('/api-test', (req, res) => {
 });
 
 // Tambahkan route fallback untuk SPA routing (opsional)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/index.html'));
-});
+//app.get('*', (req, res) => {
+  //res.sendFile(path.join(__dirname, '../public/index.html'));
+//});
 
 // Export the app for testing purposes
 module.exports = app;
