@@ -41,7 +41,6 @@ module.exports = app;
 // Jalankan server only if this file is run directly (not required by a test)
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log(`Server berjalan di http://localhost:${PORT}`);
-    console.log(`Endpoint concerts tersedia di http://localhost:${PORT}/api/concerts`);
+  console.log(`Server berjalan di port ${PORT}`);
   });
 }
