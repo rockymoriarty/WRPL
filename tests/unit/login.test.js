@@ -19,5 +19,4 @@ describe('POST /auth/login', () => {
     expect(res.body).toHaveProperty('error', 'Email and password are required!');
   });
 
-  // Tambahkan test lainnya di sini...
 });
